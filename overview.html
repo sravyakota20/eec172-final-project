@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview | Cloud Snake Leaderboard Console</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1e293b;
+      background: linear-gradient(135deg, #fdf2f8, #ecfeff, #fef3c7);
+    }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1100px, 92%); margin: 0 auto; }
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #7c3aed;
+    }
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+    .nav-links a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    .hero {
+      padding: 68px 0 34px;
+    }
+    .hero-card {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 34px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid #f5d0fe;
+      color: #c026d3;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      line-height: 1.08;
+    }
+    .gradient-text {
+      display: block;
+      background: linear-gradient(90deg, #c026d3, #0891b2, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-text {
+      margin-top: 18px;
+      max-width: 780px;
+      font-size: 1.08rem;
+      line-height: 1.9;
+      color: #475569;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 16px;
+      font-weight: 800;
+    }
+    .btn-primary { background: #0f172a; color: white; }
+    .btn-secondary { background: white; border: 1px solid #cbd5e1; }
+    .section {
+      padding: 18px 0 22px;
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+    .card {
+      background: rgba(255,255,255,0.84);
+      border-radius: 28px;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.95);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.07);
+    }
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 1.8rem;
+    }
+    .card p {
+      color: #475569;
+      line-height: 1.85;
+      margin: 0;
+    }
+    .feature-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .feature-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px;
+      border-radius: 20px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      background: linear-gradient(135deg, #f5d0fe, #bae6fd);
+      flex-shrink: 0;
+    }
+    .wide-card {
+      margin-top: 22px;
+      background: #0f172a;
+      color: white;
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.2);
+    }
+    .wide-card h2 { margin-top: 0; font-size: 2rem; }
+    .wide-card p {
+      color: #cbd5e1;
+      line-height: 1.9;
+      max-width: 950px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .chip {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    footer {
+      padding: 28px 0 42px;
+    }
+    .footer-box {
+      background: #020617;
+      color: #cbd5e1;
+      border-radius: 28px;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .nav-inner, .section-grid { grid-template-columns: 1fr; }
+      .nav-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .hero-card, .card, .wide-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand">Cloud Snake</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="overview.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="team.html">Team</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <div class="eyebrow">Project Overview</div>
+        <h1>
+          What Cloud Snake is
+          <span class="gradient-text">and why it matters</span>
+        </h1>
+        <p class="hero-text">
+          Cloud Snake Leaderboard Console is an embedded systems project that turns a simple game into a complete interactive hardware system. Instead of just displaying graphics, the project combines real-time user input, OLED rendering, local score storage, and cloud communication into one polished experience.
+        </p>
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="architecture.html">Next: Architecture</a>
+          <a class="btn btn-secondary" href="index.html">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container section-grid">
+      <div class="card">
+        <h2>Main idea</h2>
+        <p>
+          The goal of this project is to build a standalone gaming console using the CC3200 LaunchPad. A player interacts with the system using an IR remote, watches gameplay on a color OLED display, and submits scores to a cloud-connected leaderboard. This makes the project a strong example of how embedded systems can combine hardware control, communication protocols, and user-facing design in a single application.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Why we chose it</h2>
+        <p>
+          We wanted a project that was visually impressive, technically meaningful, and realistic to demonstrate in class. Snake is familiar and easy to understand, but the full system behind it shows much more than gameplay. It highlights responsiveness, communication between components, and the ability to connect a local embedded device to a cloud-based webpage.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container card">
+      <h2>Key features</h2>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="icon">🎮</div>
+          <div>
+            <strong>Interactive gameplay</strong><br />
+            The user controls Snake in real time through an IR remote, creating a responsive embedded interface without using a keyboard or touchscreen.
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="icon">🖥️</div>
+          <div>
+            <strong>Color OLED graphics</strong><br />
+            The OLED display is used to show menus, gameplay, scores, and status information in a visually appealing way.
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="icon">☁️</div>
+          <div>
+            <strong>Cloud leaderboard</strong><br />
+            Scores are uploaded after each run so the companion webpage can show rankings and recent activity.
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="icon">📡</div>
+          <div>
+            <strong>Multi-protocol integration</strong><br />
+            The project uses embedded communication concepts like SPI, I2C, IR input handling, and Wi-Fi networking in one system.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="wide-card">
+        <h2>What this project demonstrates</h2>
+        <p>
+          Cloud Snake is not just a game demo. It demonstrates how embedded systems can manage user interaction, hardware peripherals, display rendering, persistent data, and internet connectivity together. That makes it a strong final project because it shows both low-level technical skills and the ability to design an experience that looks clean, understandable, and engaging to users.
+        </p>
+        <div class="chips">
+          <div class="chip">CC3200 LaunchPad</div>
+          <div class="chip">Embedded Graphics</div>
+          <div class="chip">IR Input</div>
+          <div class="chip">Wi-Fi Connectivity</div>
+          <div class="chip">Cloud Score Uploads</div>
+          <div class="chip">Companion Webpage</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-box">
+      <div>Overview page • Cloud Snake Leaderboard Console</div>
+      <div>Embedded systems final project website</div>
+    </div>
+  </footer>
+</body>
+</html>
