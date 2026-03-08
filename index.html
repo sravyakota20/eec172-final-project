@@ -1,0 +1,239 @@
+export default function CloudSnakeProjectPage() {
+  const features = [
+    {
+      title: "IR-Controlled Gameplay",
+      desc: "Use an IR remote to move the snake, pause the game, and navigate menus without needing a phone or keyboard.",
+      icon: "🎮",
+    },
+    {
+      title: "Color OLED Display",
+      desc: "Fast SPI-driven graphics on a 1.5\" color OLED make the game feel responsive and polished.",
+      icon: "🖥️",
+    },
+    {
+      title: "Cloud Leaderboard",
+      desc: "After each game, scores are uploaded to AWS IoT so a webpage can display top players and recent runs.",
+      icon: "☁️",
+    },
+    {
+      title: "Smart Sensors",
+      desc: "An I2C sensor enables extra interactions like shake-to-pause or future gameplay extensions.",
+      icon: "📡",
+    },
+  ];
+
+  const stack = [
+    "CC3200 LaunchPad",
+    "1.5\" Color OLED",
+    "IR Receiver + Remote",
+    "AWS IoT",
+    "SPI + I2C",
+    "Persistent Local Scores",
+  ];
+
+  const flow = [
+    "Boot into the main menu",
+    "Enter player name",
+    "Start Snake on the OLED display",
+    "Control movement with IR remote",
+    "Save score after game over",
+    "Upload results to cloud leaderboard",
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-fuchsia-100 via-cyan-50 to-amber-50 text-slate-900">
+      <section className="relative overflow-hidden px-6 py-14 md:px-10 lg:px-16">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2">
+          <div>
+            <div className="mb-4 inline-flex rounded-full border border-fuchsia-200 bg-white/70 px-4 py-1 text-sm font-medium shadow-sm backdrop-blur">
+              EEC 172 Final Project
+            </div>
+            <h1 className="text-4xl font-extrabold leading-tight md:text-6xl">
+              Cloud Snake
+              <span className="block bg-gradient-to-r from-fuchsia-600 via-cyan-600 to-emerald-500 bg-clip-text text-transparent">
+                Leaderboard Console
+              </span>
+            </h1>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-slate-700">
+              A standalone embedded gaming console built with the CC3200. Play Snake on a color OLED,
+              control it with an IR remote, and send your scores to a cloud leaderboard.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-4">
+              <a
+                href="#overview"
+                className="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
+              >
+                Explore Project
+              </a>
+              <a
+                href="#architecture"
+                className="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold shadow-sm transition hover:bg-slate-50"
+              >
+                View System Design
+              </a>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3 text-sm font-medium text-slate-700">
+              <span className="rounded-full bg-white px-4 py-2 shadow-sm">SPI OLED</span>
+              <span className="rounded-full bg-white px-4 py-2 shadow-sm">IR Remote Input</span>
+              <span className="rounded-full bg-white px-4 py-2 shadow-sm">AWS IoT Uploads</span>
+              <span className="rounded-full bg-white px-4 py-2 shadow-sm">Fast Embedded UI</span>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded-[2rem] border border-white/60 bg-white/70 p-6 shadow-2xl backdrop-blur">
+              <div className="rounded-[1.5rem] bg-slate-950 p-5 text-white shadow-inner">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-fuchsia-300">Now running</p>
+                    <h2 className="text-2xl font-bold">Snake Console UI</h2>
+                  </div>
+                  <div className="rounded-full bg-emerald-400/20 px-3 py-1 text-xs font-semibold text-emerald-300">
+                    online
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 rounded-2xl bg-slate-900 p-3">
+                  {Array.from({ length: 36 }).map((_, i) => {
+                    const active = [7, 8, 9, 10, 16, 22, 28].includes(i);
+                    const food = i === 31;
+                    return (
+                      <div
+                        key={i}
+                        className={`aspect-square rounded-md ${
+                          active
+                            ? "bg-gradient-to-br from-cyan-400 to-emerald-400"
+                            : food
+                            ? "bg-gradient-to-br from-amber-300 to-orange-400"
+                            : "bg-slate-800"
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div className="rounded-2xl bg-slate-900 p-4">
+                    <p className="text-slate-400">Player</p>
+                    <p className="mt-1 text-lg font-semibold">SHANU</p>
+                  </div>
+                  <div className="rounded-2xl bg-slate-900 p-4">
+                    <p className="text-slate-400">Score</p>
+                    <p className="mt-1 text-lg font-semibold">128</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="overview" className="px-6 py-12 md:px-10 lg:px-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8 max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-fuchsia-600">Overview</p>
+            <h2 className="mt-2 text-3xl font-bold md:text-4xl">What this project does</h2>
+            <p className="mt-3 text-slate-700">
+              Cloud Snake is an embedded systems project that combines interactive gameplay, hardware protocols,
+              local persistence, and cloud connectivity into one polished console experience.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {features.map((item) => (
+              <div key={item.title} className="rounded-3xl border border-white/70 bg-white/80 p-6 shadow-lg backdrop-blur">
+                <div className="text-4xl">{item.icon}</div>
+                <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-700">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="architecture" className="px-6 py-12 md:px-10 lg:px-16">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.2fr,0.8fr]">
+          <div className="rounded-3xl bg-slate-900 p-8 text-white shadow-2xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Architecture</p>
+            <h2 className="mt-2 text-3xl font-bold">System flow</h2>
+            <div className="mt-8 grid gap-4">
+              {flow.map((step, index) => (
+                <div key={step} className="flex items-start gap-4 rounded-2xl bg-white/5 p-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-cyan-400 font-bold text-white">
+                    {index + 1}
+                  </div>
+                  <p className="pt-2 text-slate-200">{step}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="rounded-3xl bg-white p-6 shadow-lg">
+              <h3 className="text-xl font-bold">Core Technologies</h3>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {stack.map((item) => (
+                  <span key={item} className="rounded-full bg-gradient-to-r from-fuchsia-100 to-cyan-100 px-4 py-2 text-sm font-medium text-slate-800">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-gradient-to-br from-amber-200 via-pink-200 to-cyan-200 p-6 shadow-lg">
+              <h3 className="text-xl font-bold">Why it stands out</h3>
+              <p className="mt-3 leading-7 text-slate-800">
+                This project is more than just a game. It demonstrates embedded graphics, remote input handling,
+                sensor integration, Wi-Fi connectivity, and cloud-backed data visualization in one cohesive system.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-12 md:px-10 lg:px-16">
+        <div className="mx-auto max-w-7xl rounded-[2rem] bg-white/80 p-8 shadow-xl backdrop-blur">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Demo Goals</p>
+              <h2 className="mt-2 text-3xl font-bold">Minimum viable demo</h2>
+              <ul className="mt-5 space-y-3 text-slate-700">
+                <li>• Boot directly into a polished menu on the OLED screen</li>
+                <li>• Play Snake with responsive IR remote controls</li>
+                <li>• Save player name and scores locally</li>
+                <li>• Upload game results to AWS IoT after game over</li>
+                <li>• Show leaderboard data on a companion webpage</li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-600">Team</p>
+              <h2 className="mt-2 text-3xl font-bold">Project members</h2>
+              <div className="mt-5 space-y-4">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="font-semibold">Sravya Kota</p>
+                  <p className="text-sm text-slate-600">CSE, UC Davis</p>
+                  <p className="text-sm text-slate-600">sskota@ucdavis.edu</p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="font-semibold">Xunye Nian</p>
+                  <p className="text-sm text-slate-600">CE, UC Davis</p>
+                  <p className="text-sm text-slate-600">xynian@ucdavis.edu</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="px-6 pb-12 pt-4 md:px-10 lg:px-16">
+        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-4 rounded-3xl bg-slate-950 px-6 py-5 text-sm text-slate-300 md:flex-row md:items-center">
+          <p>Cloud Snake Leaderboard Console • Embedded Systems Final Project</p>
+          <p>Built for fast demoing, clear storytelling, and a stronger visual impression.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
