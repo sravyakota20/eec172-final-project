@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard | Cloud Snake Leaderboard Console</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1e293b;
+      background: linear-gradient(135deg, #fdf2f8, #ecfeff, #fef3c7);
+    }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1120px, 92%); margin: 0 auto; }
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #7c3aed;
+    }
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+    .nav-links a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    .hero {
+      padding: 68px 0 30px;
+    }
+    .hero-card {
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 34px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid #bae6fd;
+      color: #0891b2;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      line-height: 1.08;
+    }
+    .gradient-text {
+      display: block;
+      background: linear-gradient(90deg, #0ea5e9, #14b8a6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-text {
+      margin-top: 18px;
+      max-width: 800px;
+      font-size: 1.08rem;
+      line-height: 1.9;
+      color: #475569;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 16px;
+      font-weight: 800;
+    }
+    .btn-primary { background: #0f172a; color: white; }
+    .btn-secondary { background: white; border: 1px solid #cbd5e1; }
+    .section { padding: 18px 0 22px; }
+    .panel {
+      background: rgba(255,255,255,0.84);
+      border-radius: 30px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,0.95);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.07);
+    }
+    .controls {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+    select, button {
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      background: white;
+    }
+    button {
+      font-weight: 700;
+      cursor: pointer;
+      background: #0f172a;
+      color: white;
+      border: none;
+    }
+    .status {
+      margin-bottom: 16px;
+      color: #475569;
+      font-weight: 600;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+      background: white;
+    }
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    th {
+      background: #f8fafc;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #475569;
+    }
+    tr:last-child td { border-bottom: none; }
+    .rank {
+      font-weight: 800;
+      color: #7c3aed;
+    }
+    .empty {
+      padding: 18px;
+      border-radius: 18px;
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .info-card {
+      margin-top: 20px;
+      background: #0f172a;
+      color: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.2);
+    }
+    .info-card p {
+      margin: 0;
+      line-height: 1.9;
+      color: #cbd5e1;
+    }
+    footer {
+      padding: 28px 0 42px;
+    }
+    .footer-box {
+      background: #020617;
+      color: #cbd5e1;
+      border-radius: 28px;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .nav-inner {
+        flex-direction: column;
+        gap: 14px;
+      }
+      .hero-card, .panel, .info-card { padding: 24px; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tr {
+        margin-bottom: 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      td {
+        border-bottom: 1px solid #e2e8f0;
+      }
+      td:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand">Cloud Snake</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="overview.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="team.html">Team</a>
+        <a href="leaderboard.html">Leaderboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <div class="eyebrow">Live Leaderboard</div>
+        <h1>
+          Cloud scores from
+          <span class="gradient-text">AWS IoT + DynamoDB</span>
+        </h1>
+        <p class="hero-text">
+          This page fetches game results published by the CC3200, routed through AWS IoT, stored in DynamoDB, and returned through your Lambda Function URL.
+        </p>
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="index.html">Back to Home</a>
+          <a class="btn btn-secondary" href="architecture.html">View Architecture</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="panel">
+        <div class="controls">
+          <label for="difficultySelect"><strong>Difficulty:</strong></label>
+          <select id="difficultySelect">
+            <option value="">All</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <button onclick="loadLeaderboard()">Refresh</button>
+        </div>
+
+        <div id="status" class="status">Loading leaderboard...</div>
+
+        <div id="tableWrapper"></div>
+
+        <div class="info-card">
+          <p>
+            Data flow: CC3200 publishes score events → AWS IoT rule stores them in DynamoDB → Lambda reads and sorts them → this page displays the live leaderboard.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-box">
+      <div>Leaderboard page • Cloud Snake Leaderboard Console</div>
+      <div>Live scores powered by AWS</div>
+    </div>
+  </footer>
+
+  <script>
+    const BASE_URL = "https://2i2ig4dgw4ntiqzeyhss245yrq0zaypp.lambda-url.us-east-2.on.aws/";
+
+    async function loadLeaderboard() {
+      const difficulty = document.getElementById("difficultySelect").value;
+      const status = document.getElementById("status");
+      const tableWrapper = document.getElementById("tableWrapper");
+
+      let url = BASE_URL;
+      if (difficulty) {
+        url += "?difficulty=" + encodeURIComponent(difficulty);
+      }
+
+      status.textContent = "Loading leaderboard...";
+      tableWrapper.innerHTML = "";
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed");
+        }
+
+        status.textContent = difficulty
+          ? `Showing ${difficulty} scores`
+          : "Showing all scores";
+
+        if (!Array.isArray(data) || data.length === 0) {
+          tableWrapper.innerHTML = '<div class="empty">No scores available yet.</div>';
+          return;
+        }
+
+        let html = `
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Difficulty</th>
+                <th>Device</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        data.forEach((item, index) => {
+          html += `
+            <tr>
+              <td class="rank">${index + 1}</td>
+              <td>${item.playerId || "Unknown"}</td>
+              <td>${item.score ?? "-"}</td>
+              <td>${item.difficulty || "-"}</td>
+              <td>${item.deviceId || "-"}</td>
+              <td>${item.timestamp || "-"}</td>
+            </tr>
+          `;
+        });
+
+        html += `</tbody></table>`;
+        tableWrapper.innerHTML = html;
+      } catch (error) {
+        status.textContent = "Failed to load leaderboard.";
+        tableWrapper.innerHTML = `<div class="empty">${error.message}</div>`;
+        console.error(error);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadLeaderboard);
+  </script>
+</body>
+</html>
