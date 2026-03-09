@@ -1,277 +1,499 @@
-export default function CloudSnakeProjectPage() {
-  const features = [
-    {
-      title: "IR-Controlled Gameplay",
-      desc: "Use an IR remote to move the snake, pause the game, and navigate menus without needing a phone or keyboard.",
-      icon: "🎮",
-    },
-    {
-      title: "Color OLED Display",
-      desc: "Fast SPI-driven graphics on a 1.5\" color OLED make the game feel responsive and polished.",
-      icon: "🖥️",
-    },
-    {
-      title: "Cloud Leaderboard",
-      desc: "After each game, scores are uploaded to AWS IoT so a webpage can display top players and recent runs.",
-      icon: "☁️",
-    },
-    {
-      title: "Smart Sensors",
-      desc: "An I2C sensor enables extra interactions like shake-to-pause or future gameplay extensions.",
-      icon: "📡",
-    },
-  ];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cloud Snake Leaderboard Console</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1e293b;
+      background: linear-gradient(135deg, #fdf2f8, #ecfeff, #fef3c7);
+    }
+    a { text-decoration: none; color: inherit; }
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #7c3aed;
+    }
+    .nav-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+    .nav-links a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    .hero {
+      padding: 72px 0 48px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 36px;
+      align-items: center;
+    }
+    .pill {
+      display: inline-block;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid #e9d5ff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4.6rem);
+      line-height: 1.05;
+      margin: 0;
+    }
+    .gradient-text {
+      display: block;
+      background: linear-gradient(90deg, #c026d3, #0891b2, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #475569;
+      max-width: 650px;
+      margin-top: 18px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 14px 22px;
+      border-radius: 16px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .btn-primary {
+      background: #0f172a;
+      color: white;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+    }
+    .btn-secondary {
+      background: white;
+      border: 1px solid #cbd5e1;
+    }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .tag {
+      background: white;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .mockup-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 30px;
+      padding: 22px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+    }
+    .screen {
+      background: #020617;
+      color: white;
+      border-radius: 24px;
+      padding: 20px;
+    }
+    .screen-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .online {
+      background: rgba(16,185,129,0.15);
+      color: #86efac;
+      font-size: 0.8rem;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .snake-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      background: #0f172a;
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .cell {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      background: #1e293b;
+    }
+    .snake { background: linear-gradient(135deg, #22d3ee, #34d399); }
+    .food { background: linear-gradient(135deg, #fde68a, #fb923c); }
+    .score-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .score-box {
+      background: #0f172a;
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .section {
+      padding: 34px 0 20px;
+    }
+    .section-title {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #c026d3;
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin: 0 0 12px;
+    }
+    .section-subtext {
+      max-width: 760px;
+      color: #475569;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.82);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+      border: 1px solid rgba(255,255,255,0.9);
+    }
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .dark-panel {
+      background: #0f172a;
+      color: white;
+      border-radius: 30px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+    }
+    .flow-step {
+      display: flex;
+      gap: 16px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 16px;
+      margin-top: 12px;
+      align-items: flex-start;
+    }
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      background: linear-gradient(135deg, #d946ef, #22d3ee);
+      flex-shrink: 0;
+    }
+    .light-panel, .accent-panel {
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    }
+    .light-panel { background: white; }
+    .accent-panel { background: linear-gradient(135deg, #fde68a, #fbcfe8, #a5f3fc); }
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fae8ff, #cffafe);
+      font-weight: 600;
+    }
+    .big-panel {
+      background: rgba(255,255,255,0.82);
+      border-radius: 34px;
+      padding: 30px;
+      box-shadow: 0 15px 36px rgba(0,0,0,0.08);
+    }
+    .demo-team {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .member {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    footer {
+      padding: 24px 0 40px;
+    }
+    .footer-box {
+      background: #020617;
+      color: #cbd5e1;
+      border-radius: 28px;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    ul { padding-left: 22px; line-height: 1.9; }
 
-  const stack = [
-    "CC3200 LaunchPad",
-    "1.5\" Color OLED",
-    "IR Receiver + Remote",
-    "AWS IoT",
-    "SPI + I2C",
-    "Persistent Local Scores",
-  ];
+    @media (max-width: 950px) {
+      .hero-grid, .two-col, .demo-team, .card-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav-inner {
+        flex-direction: column;
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand">Cloud Snake</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="overview.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="team.html">Team</a>
+        <a href="leaderboard.html">Leaderboard</a>
+      </div>
+    </div>
+  </nav>
 
-  const flow = [
-    "Boot into the main menu",
-    "Enter player name",
-    "Start Snake on the OLED display",
-    "Control movement with IR remote",
-    "Save score after game over",
-    "Upload results to cloud leaderboard",
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-fuchsia-100 via-cyan-50 to-amber-50 text-slate-900">
-    <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10 lg:px-16">
-        <div className="text-2xl font-extrabold text-violet-600">Cloud Snake</div>
-
-        <div className="flex flex-wrap gap-4">
-          <a
-            href="index.html"
-            className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5"
-          >
-            Home
-          </a>
-          <a
-            href="overview.html"
-            className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5"
-          >
-            Overview
-          </a>
-          <a
-            href="architecture.html"
-            className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5"
-          >
-            Architecture
-          </a>
-          <a
-            href="team.html"
-            className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5"
-          >
-            Team
-          </a>
-          <a
-            href="leaderboard.html"
-            className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5"
-          >
-            Leaderboard
-          </a>
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="pill">EEC 172 Final Project</div>
+        <h1>
+          Cloud Snake
+          <span class="gradient-text">Leaderboard Console</span>
+        </h1>
+        <p>
+          A standalone embedded gaming console built with the CC3200. Play Snake on a color OLED,
+          control it with an IR remote, and send your scores to a cloud leaderboard.
+        </p>
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="overview.html">Explore Project</a>
+          <a class="btn btn-secondary" href="architecture.html">View System Design</a>
+        </div>
+        <div class="tag-row">
+          <div class="tag">SPI OLED</div>
+          <div class="tag">IR Remote Input</div>
+          <div class="tag">AWS IoT Uploads</div>
+          <div class="tag">Fast Embedded UI</div>
         </div>
       </div>
-    </nav>
-      <section className="relative overflow-hidden px-6 py-14 md:px-10 lg:px-16">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2">
-          <div>
-            <div className="mb-4 inline-flex rounded-full border border-fuchsia-200 bg-white/70 px-4 py-1 text-sm font-medium shadow-sm backdrop-blur">
-              EEC 172 Final Project
-            </div>
-            <h1 className="text-4xl font-extrabold leading-tight md:text-6xl">
-              Cloud Snake
-              <span className="block bg-gradient-to-r from-fuchsia-600 via-cyan-600 to-emerald-500 bg-clip-text text-transparent">
-                Leaderboard Console
-              </span>
-            </h1>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-slate-700">
-              A standalone embedded gaming console built with the CC3200. Play Snake on a color OLED,
-              control it with an IR remote, and send your scores to a cloud leaderboard.
-            </p>
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#overview"
-                className="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
-              >
-                Explore Project
-              </a>
-              <a
-                href="#architecture"
-                className="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold shadow-sm transition hover:bg-slate-50"
-              >
-                View System Design
-              </a>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3 text-sm font-medium text-slate-700">
-              <span className="rounded-full bg-white px-4 py-2 shadow-sm">SPI OLED</span>
-              <span className="rounded-full bg-white px-4 py-2 shadow-sm">IR Remote Input</span>
-              <span className="rounded-full bg-white px-4 py-2 shadow-sm">AWS IoT Uploads</span>
-              <span className="rounded-full bg-white px-4 py-2 shadow-sm">Fast Embedded UI</span>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="rounded-[2rem] border border-white/60 bg-white/70 p-6 shadow-2xl backdrop-blur">
-              <div className="rounded-[1.5rem] bg-slate-950 p-5 text-white shadow-inner">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-fuchsia-300">Now running</p>
-                    <h2 className="text-2xl font-bold">Snake Console UI</h2>
-                  </div>
-                  <div className="rounded-full bg-emerald-400/20 px-3 py-1 text-xs font-semibold text-emerald-300">
-                    online
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-2 rounded-2xl bg-slate-900 p-3">
-                  {Array.from({ length: 36 }).map((_, i) => {
-                    const active = [7, 8, 9, 10, 16, 22, 28].includes(i);
-                    const food = i === 31;
-                    return (
-                      <div
-                        key={i}
-                        className={`aspect-square rounded-md ${
-                          active
-                            ? "bg-gradient-to-br from-cyan-400 to-emerald-400"
-                            : food
-                            ? "bg-gradient-to-br from-amber-300 to-orange-400"
-                            : "bg-slate-800"
-                        }`}
-                      />
-                    );
-                  })}
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-2xl bg-slate-900 p-4">
-                    <p className="text-slate-400">Player</p>
-                    <p className="mt-1 text-lg font-semibold">SHANU</p>
-                  </div>
-                  <div className="rounded-2xl bg-slate-900 p-4">
-                    <p className="text-slate-400">Score</p>
-                    <p className="mt-1 text-lg font-semibold">128</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="overview" className="px-6 py-12 md:px-10 lg:px-16">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-8 max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-fuchsia-600">Overview</p>
-            <h2 className="mt-2 text-3xl font-bold md:text-4xl">What this project does</h2>
-            <p className="mt-3 text-slate-700">
-              Cloud Snake is an embedded systems project that combines interactive gameplay, hardware protocols,
-              local persistence, and cloud connectivity into one polished console experience.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {features.map((item) => (
-              <div key={item.title} className="rounded-3xl border border-white/70 bg-white/80 p-6 shadow-lg backdrop-blur">
-                <div className="text-4xl">{item.icon}</div>
-                <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-700">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="architecture" className="px-6 py-12 md:px-10 lg:px-16">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.2fr,0.8fr]">
-          <div className="rounded-3xl bg-slate-900 p-8 text-white shadow-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Architecture</p>
-            <h2 className="mt-2 text-3xl font-bold">System flow</h2>
-            <div className="mt-8 grid gap-4">
-              {flow.map((step, index) => (
-                <div key={step} className="flex items-start gap-4 rounded-2xl bg-white/5 p-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-cyan-400 font-bold text-white">
-                    {index + 1}
-                  </div>
-                  <p className="pt-2 text-slate-200">{step}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="rounded-3xl bg-white p-6 shadow-lg">
-              <h3 className="text-xl font-bold">Core Technologies</h3>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {stack.map((item) => (
-                  <span key={item} className="rounded-full bg-gradient-to-r from-fuchsia-100 to-cyan-100 px-4 py-2 text-sm font-medium text-slate-800">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-3xl bg-gradient-to-br from-amber-200 via-pink-200 to-cyan-200 p-6 shadow-lg">
-              <h3 className="text-xl font-bold">Why it stands out</h3>
-              <p className="mt-3 leading-7 text-slate-800">
-                This project is more than just a game. It demonstrates embedded graphics, remote input handling,
-                sensor integration, Wi-Fi connectivity, and cloud-backed data visualization in one cohesive system.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-6 py-12 md:px-10 lg:px-16">
-        <div className="mx-auto max-w-7xl rounded-[2rem] bg-white/80 p-8 shadow-xl backdrop-blur">
-          <div className="grid gap-8 lg:grid-cols-2">
+      <div class="mockup-card">
+        <div class="screen">
+          <div class="screen-top">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Demo Goals</p>
-              <h2 className="mt-2 text-3xl font-bold">Minimum viable demo</h2>
-              <ul className="mt-5 space-y-3 text-slate-700">
-                <li>• Boot directly into a polished menu on the OLED screen</li>
-                <li>• Play Snake with responsive IR remote controls</li>
-                <li>• Save player name and scores locally</li>
-                <li>• Upload game results to AWS IoT after game over</li>
-                <li>• Show leaderboard data on a companion webpage</li>
-              </ul>
+              <div style="font-size: 0.9rem; color: #f0abfc;">Now running</div>
+              <div style="font-size: 1.7rem; font-weight: 800; margin-top: 4px;">Snake Console UI</div>
             </div>
+            <div class="online">online</div>
+          </div>
 
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-600">Team</p>
-              <h2 className="mt-2 text-3xl font-bold">Project members</h2>
-              <div className="mt-5 space-y-4">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="font-semibold">Sravya Kota</p>
-                  <p className="text-sm text-slate-600">CSE, UC Davis</p>
-                  <p className="text-sm text-slate-600">sskota@ucdavis.edu</p>
-                </div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="font-semibold">Xunye Nian</p>
-                  <p className="text-sm text-slate-600">CE, UC Davis</p>
-                  <p className="text-sm text-slate-600">xynian@ucdavis.edu</p>
-                </div>
-              </div>
+          <div class="snake-grid">
+            <div class="cell"></div><div class="cell snake"></div><div class="cell snake"></div><div class="cell snake"></div><div class="cell snake"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell snake"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell snake"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell snake"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell food"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-box">
+              <div style="color:#94a3b8; font-size:0.9rem;">Player</div>
+              <div style="font-size:1.2rem; font-weight:700; margin-top:4px;">SHANU</div>
+            </div>
+            <div class="score-box">
+              <div style="color:#94a3b8; font-size:0.9rem;">Score</div>
+              <div style="font-size:1.2rem; font-weight:700; margin-top:4px;">128</div>
             </div>
           </div>
         </div>
-      </section>
-
-      <footer className="px-6 pb-12 pt-4 md:px-10 lg:px-16">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-4 rounded-3xl bg-slate-950 px-6 py-5 text-sm text-slate-300 md:flex-row md:items-center">
-          <p>Cloud Snake Leaderboard Console • Embedded Systems Final Project</p>
-          <p>Built for fast demoing, clear storytelling, and a stronger visual impression.</p>
-        </div>
-      </footer>
+      </div>
     </div>
-  );
-}
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-title">Overview</div>
+      <h2>What this project does</h2>
+      <p class="section-subtext">
+        Cloud Snake is an embedded systems project that combines interactive gameplay, hardware protocols,
+        local persistence, and cloud connectivity into one polished console experience.
+      </p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🎮</div>
+          <h3>IR-Controlled Gameplay</h3>
+          <p>Use an IR remote to move the snake, pause the game, and navigate menus without needing a phone or keyboard.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🖥️</div>
+          <h3>Color OLED Display</h3>
+          <p>Fast SPI-driven graphics on a 1.5-inch color OLED make the game feel responsive and polished.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">☁️</div>
+          <h3>Cloud Leaderboard</h3>
+          <p>After each game, scores are uploaded to AWS IoT so a webpage can display top players and recent runs.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📡</div>
+          <h3>Smart Sensors</h3>
+          <p>An I2C sensor enables extra interactions like shake-to-pause or future gameplay extensions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div class="dark-panel">
+        <div class="section-title" style="color:#67e8f9;">Architecture</div>
+        <h2 style="margin-bottom:18px;">System flow</h2>
+        <div class="flow-step"><div class="step-number">1</div><div>Boot into the main menu</div></div>
+        <div class="flow-step"><div class="step-number">2</div><div>Enter player name</div></div>
+        <div class="flow-step"><div class="step-number">3</div><div>Start Snake on the OLED display</div></div>
+        <div class="flow-step"><div class="step-number">4</div><div>Control movement with IR remote</div></div>
+        <div class="flow-step"><div class="step-number">5</div><div>Save score after game over</div></div>
+        <div class="flow-step"><div class="step-number">6</div><div>Upload results to cloud leaderboard</div></div>
+      </div>
+
+      <div>
+        <div class="light-panel">
+          <h3>Core Technologies</h3>
+          <div class="chip-wrap">
+            <div class="chip">CC3200 LaunchPad</div>
+            <div class="chip">1.5-inch Color OLED</div>
+            <div class="chip">IR Receiver + Remote</div>
+            <div class="chip">AWS IoT</div>
+            <div class="chip">SPI + I2C</div>
+            <div class="chip">Persistent Local Scores</div>
+          </div>
+        </div>
+
+        <div class="accent-panel" style="margin-top:20px;">
+          <h3>Why it stands out</h3>
+          <p>
+            This project is more than just a game. It demonstrates embedded graphics, remote input handling,
+            sensor integration, Wi-Fi connectivity, and cloud-backed data visualization in one cohesive system.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container big-panel">
+      <div class="demo-team">
+        <div>
+          <div class="section-title" style="color:#059669;">Demo Goals</div>
+          <h2>Minimum viable demo</h2>
+          <ul>
+            <li>Boot directly into a polished menu on the OLED screen</li>
+            <li>Play Snake with responsive IR remote controls</li>
+            <li>Save player name and scores locally</li>
+            <li>Upload game results to AWS IoT after game over</li>
+            <li>Show leaderboard data on a companion webpage</li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="section-title" style="color:#0891b2;">Team</div>
+          <h2>Project members</h2>
+          <div class="member">
+            <strong>Sravya Kota</strong><br />
+            CSE, UC Davis<br />
+            sskota@ucdavis.edu
+          </div>
+          <div class="member">
+            <strong>Xunye Nian</strong><br />
+            CE, UC Davis<br />
+            xynian@ucdavis.edu
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-box">
+      <div>Cloud Snake Leaderboard Console • Embedded Systems Final Project</div>
+      <div>Built for fast demoing, clear storytelling, and a stronger visual impression.</div>
+    </div>
+  </footer>
+</body>
+</html>
