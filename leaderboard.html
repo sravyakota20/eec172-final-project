@@ -287,37 +287,44 @@
 
   <script>
     const BASE_URL = "https://2i2ig4dgw4ntiqzeyhss245yrq0zaypp.lambda-url.us-east-2.on.aws/";
-
+  
     async function loadLeaderboard() {
       const difficulty = document.getElementById("difficultySelect").value;
       const status = document.getElementById("status");
       const tableWrapper = document.getElementById("tableWrapper");
-
+  
       let url = BASE_URL;
       if (difficulty) {
         url += "?difficulty=" + encodeURIComponent(difficulty);
       }
-
+  
       status.textContent = "Loading leaderboard...";
       tableWrapper.innerHTML = "";
-
+  
       try {
         const response = await fetch(url);
-        const data = await response.json();
-
+        const text = await response.text();
+  
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (err) {
+          throw new Error(text || "Server returned invalid JSON");
+        }
+  
         if (!response.ok) {
           throw new Error(data.error || "Request failed");
         }
-
+  
         status.textContent = difficulty
           ? `Showing ${difficulty} scores`
           : "Showing all scores";
-
+  
         if (!Array.isArray(data) || data.length === 0) {
           tableWrapper.innerHTML = '<div class="empty">No scores available yet.</div>';
           return;
         }
-
+  
         let html = `
           <table>
             <thead>
@@ -332,7 +339,7 @@
             </thead>
             <tbody>
         `;
-
+  
         data.forEach((item, index) => {
           html += `
             <tr>
@@ -345,16 +352,17 @@
             </tr>
           `;
         });
-
+  
         html += `</tbody></table>`;
         tableWrapper.innerHTML = html;
+  
       } catch (error) {
         status.textContent = "Failed to load leaderboard.";
         tableWrapper.innerHTML = `<div class="empty">${error.message}</div>`;
         console.error(error);
       }
     }
-
+  
     window.addEventListener("DOMContentLoaded", loadLeaderboard);
   </script>
 </body>
