@@ -154,24 +154,24 @@
       border-radius: 999px;
       font-weight: 700;
     }
-    .game-gif-wrap {
+    .game-media-wrap {
       background: #0f172a;
       border-radius: 18px;
       padding: 12px;
     }
-    .game-gif {
+    .game-media {
       display: block;
       width: 100%;
       border-radius: 12px;
       background: #111827;
     }
-    .gif-credit {
+    .media-credit {
       margin-top: 10px;
       font-size: 0.78rem;
       line-height: 1.5;
       color: #94a3b8;
     }
-    .gif-credit a {
+    .media-credit a {
       color: #cbd5e1;
       text-decoration: underline;
     }
@@ -382,16 +382,13 @@
             <div class="online">online</div>
           </div>
 
-          <div class="game-gif-wrap">
-            <img
-              class="game-gif"
-              src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Snake_can_be_completed.gif"
-              alt="Animated Snake gameplay GIF"
-            />
-            <div class="gif-credit">
-              Snake GIF by <a href="https://commons.wikimedia.org/wiki/User:Ustone07">Ustone07</a>, licensed under
-              <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>, via
-              <a href="https://commons.wikimedia.org/w/index.php?curid=25527034">Wikimedia Commons</a>.
+          <div class="game-media-wrap">
+            <video class="game-media" autoplay loop muted playsinline controls>
+              <source src="pixilart-1773026533457.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <div class="media-credit">
+              Demo gameplay video uploaded for the Cloud Snake project homepage.
             </div>
           </div>
 
