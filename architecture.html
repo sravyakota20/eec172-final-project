@@ -282,82 +282,9 @@
     <div class="container">
       <div class="diagram">
         <h2>System architecture diagram</h2>
-        <div class="diagram-visual-wrap">
-          <svg viewBox="0 0 1200 520" width="100%" role="img" aria-label="Cloud Snake architecture diagram" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="box1" x1="0" x2="1">
-                <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.95"/>
-              </linearGradient>
-              <linearGradient id="box2" x1="0" x2="1">
-                <stop offset="0%" stop-color="#34d399" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.95"/>
-              </linearGradient>
-              <linearGradient id="box3" x1="0" x2="1">
-                <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.95"/>
-              </linearGradient>
-              <linearGradient id="box4" x1="0" x2="1">
-                <stop offset="0%" stop-color="#f472b6" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="#ec4899" stop-opacity="0.95"/>
-              </linearGradient>
-              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#020617" flood-opacity="0.45"/>
-              </filter>
-              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                <path d="M0,0 L10,5 L0,10 z" fill="#67e8f9"/>
-              </marker>
-            </defs>
-
-            <rect x="40" y="52" rx="26" ry="26" width="210" height="128" fill="url(#box1)" filter="url(#shadow)"/>
-            <text x="145" y="95" fill="#082f49" font-size="26" font-weight="800" text-anchor="middle">IR Remote</text>
-            <text x="145" y="126" fill="#164e63" font-size="18" font-weight="700" text-anchor="middle">Player input</text>
-            <text x="145" y="152" fill="#164e63" font-size="18" font-weight="700" text-anchor="middle">direction + menus</text>
-
-            <rect x="330" y="52" rx="26" ry="26" width="250" height="128" fill="url(#box2)" filter="url(#shadow)"/>
-            <text x="455" y="95" fill="#022c22" font-size="28" font-weight="800" text-anchor="middle">CC3200</text>
-            <text x="455" y="126" fill="#134e4a" font-size="18" font-weight="700" text-anchor="middle">game logic + timing</text>
-            <text x="455" y="152" fill="#134e4a" font-size="18" font-weight="700" text-anchor="middle">Wi‑Fi + score publish</text>
-
-            <rect x="660" y="52" rx="26" ry="26" width="230" height="128" fill="url(#box3)" filter="url(#shadow)"/>
-            <text x="775" y="95" fill="#2e1065" font-size="26" font-weight="800" text-anchor="middle">Color OLED</text>
-            <text x="775" y="126" fill="#4c1d95" font-size="18" font-weight="700" text-anchor="middle">menus + gameplay</text>
-            <text x="775" y="152" fill="#4c1d95" font-size="18" font-weight="700" text-anchor="middle">score display</text>
-
-            <rect x="940" y="52" rx="26" ry="26" width="220" height="128" fill="url(#box4)" filter="url(#shadow)"/>
-            <text x="1050" y="95" fill="#500724" font-size="26" font-weight="800" text-anchor="middle">AWS IoT</text>
-            <text x="1050" y="126" fill="#831843" font-size="18" font-weight="700" text-anchor="middle">topic publish</text>
-            <text x="1050" y="152" fill="#831843" font-size="18" font-weight="700" text-anchor="middle">score events</text>
-
-            <line x1="250" y1="116" x2="330" y2="116" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrow)" />
-            <line x1="580" y1="116" x2="660" y2="116" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrow)" />
-            <line x1="580" y1="82" x2="940" y2="82" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrow)" />
-
-            <rect x="120" y="298" rx="26" ry="26" width="260" height="128" fill="#0b1329" stroke="#1e293b" stroke-width="2" filter="url(#shadow)"/>
-            <text x="250" y="338" fill="#e2e8f0" font-size="26" font-weight="800" text-anchor="middle">DynamoDB</text>
-            <text x="250" y="368" fill="#94a3b8" font-size="18" font-weight="700" text-anchor="middle">stores playerId,</text>
-            <text x="250" y="394" fill="#94a3b8" font-size="18" font-weight="700" text-anchor="middle">score, difficulty, timestamp</text>
-
-            <rect x="470" y="298" rx="26" ry="26" width="260" height="128" fill="#0b1329" stroke="#1e293b" stroke-width="2" filter="url(#shadow)"/>
-            <text x="600" y="338" fill="#e2e8f0" font-size="26" font-weight="800" text-anchor="middle">Lambda</text>
-            <text x="600" y="368" fill="#94a3b8" font-size="18" font-weight="700" text-anchor="middle">reads and sorts</text>
-            <text x="600" y="394" fill="#94a3b8" font-size="18" font-weight="700" text-anchor="middle">leaderboard results</text>
-
-            <rect x="820" y="298" rx="26" ry="26" width="260" height="128" fill="#0b1329" stroke="#1e293b" stroke-width="2" filter="url(#shadow)"/>
-            <text x="950" y="338" fill="#e2e8f0" font-size="26" font-weight="800" text-anchor="middle">Webpage</text>
-            <text x="950" y="368" fill="#94a3b8" font-size="18" font-weight="700" text-anchor="middle">leaderboard.html</text>
-            <text x="950" y="394" fill="#94a3b8" font-size="18" font-weight="700" text-anchor="middle">fetches live scores</text>
-
-            <line x1="1050" y1="180" x2="1050" y2="240" stroke="#f9a8d4" stroke-width="8" marker-end="url(#arrow)" />
-            <line x1="1050" y1="240" x2="250" y2="240" stroke="#f9a8d4" stroke-width="8" marker-end="url(#arrow)" />
-            <line x1="380" y1="362" x2="470" y2="362" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrow)" />
-            <line x1="730" y1="362" x2="820" y2="362" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrow)" />
-
-            <text x="695" y="222" fill="#cbd5e1" font-size="18" font-weight="700" text-anchor="middle">MQTT score event</text>
-            <text x="426" y="468" fill="#cbd5e1" font-size="18" font-weight="700" text-anchor="middle">stored records</text>
-            <text x="776" y="468" fill="#cbd5e1" font-size="18" font-weight="700" text-anchor="middle">JSON response</text>
-          </svg>
-        </div>
+        <div class="diagram-visual-wrap" style="padding: 22px; background: radial-gradient(circle at top left, rgba(255,255,255,0.04), rgba(15,23,42,0.95) 50%);">
+          <img src="a_flowchart_diagram_employs_colored_circles_and_re.png" alt="Cloud Snake architecture diagram" style="width: 100%; display: block; border-radius: 22px; box-shadow: 0 16px 34px rgba(0,0,0,0.24);" />
+        </div></div>
         <p class="diagram-caption">
           This diagram shows the full project pipeline: the player controls the game through the IR remote, the CC3200 updates gameplay and renders to the OLED, then publishes score events to AWS IoT. Those events are stored in DynamoDB, read by Lambda, and finally displayed on the live leaderboard webpage.
         </p>
