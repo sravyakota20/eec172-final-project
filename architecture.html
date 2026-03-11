@@ -283,17 +283,17 @@
       <div class="diagram">
         <h2>System architecture diagram</h2>
         <div class="diagram-visual-wrap" style="padding: 22px; background: radial-gradient(circle at top left, rgba(255,255,255,0.04), rgba(15,23,42,0.95) 50%);">
-          <img src="a_flowchart_diagram_employs_colored_circles_and_re.png" alt="Cloud Snake architecture diagram" style="width: 100%; display: block; border-radius: 22px; box-shadow: 0 16px 34px rgba(0,0,0,0.24);" />
-        </div></div>
+          <img src="a_flowchart_diagram_illustrates_a_cloud_connected.png" alt="Cloud Snake architecture diagram" style="width: 100%; display: block; border-radius: 22px; box-shadow: 0 16px 34px rgba(0,0,0,0.24);" />
+        </div>
         <p class="diagram-caption">
-          This diagram shows the full project pipeline: the player controls the game through the IR remote, the CC3200 updates gameplay and renders to the OLED, then publishes score events to AWS IoT. Those events are stored in DynamoDB, read by Lambda, and finally displayed on the live leaderboard webpage.
+          This diagram shows the full project pipeline: the player controls the game through the IR remote, the I2C sensor also feeds into the CC3200 for hard mode input, the CC3200 updates gameplay and renders to the OLED, then publishes score events to AWS IoT. Those events are stored in DynamoDB, read by Lambda, and finally displayed on the live leaderboard webpage.
         </p>
 
         <h2 style="margin-top:28px;">High-level data flow</h2>
         <div class="flow-grid">
           <div class="flow-box">
             <div class="flow-title">1. User Input</div>
-            <p>The player presses buttons on the IR remote to move the snake, pause gameplay, or navigate menus.</p>
+            <p>The player uses the IR remote for easy and medium difficulty, while the I2C sensor provides hard-mode control input.</p>
           </div>
           <div class="flow-box">
             <div class="flow-title">2. CC3200 Processing</div>
@@ -324,14 +324,14 @@
           <li><strong>CC3200 LaunchPad:</strong> main microcontroller and Wi-Fi platform for system control.</li>
           <li><strong>IR receiver:</strong> captures remote control signals for gameplay and menu navigation.</li>
           <li><strong>Color OLED display:</strong> shows the game screen, score, player interface, and status output.</li>
-          <li><strong>Optional I2C sensor:</strong> supports future extensions such as extra motion-based interaction.</li>
+          <li><strong>I2C sensor:</strong> provides hard-mode control input to the CC3200.</li>
         </ul>
       </div>
 
       <div class="card">
         <h2>Software responsibilities</h2>
         <ul>
-          <li><strong>Input handling:</strong> read and decode IR commands reliably.</li>
+          <li><strong>Input handling:</strong> read and decode IR commands and I2C sensor data reliably.</li>
           <li><strong>Game engine:</strong> manage snake movement, collisions, food generation, and score updates.</li>
           <li><strong>Display logic:</strong> draw menus, refresh frames, and present feedback to the player.</li>
           <li><strong>Networking:</strong> send leaderboard data through Wi-Fi to a cloud service.</li>
@@ -345,7 +345,7 @@
       <div class="stack-grid">
         <div class="stack-card">
           <h3>Input Layer</h3>
-          <p>The IR remote forms the user interaction layer. It is simple for demos, easy to understand visually, and well-suited for an embedded console experience.</p>
+          <p>The IR remote forms the user interaction layer for easy and medium play, while the I2C sensor adds a harder control path for the advanced mode.</p>
         </div>
         <div class="stack-card">
           <h3>Control Layer</h3>
