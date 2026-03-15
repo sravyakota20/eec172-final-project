@@ -29,9 +29,18 @@
       padding: 16px 0;
     }
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 800;
       font-size: 1.2rem;
       color: #7c3aed;
+    }
+    .brand img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      flex-shrink: 0;
     }
     .nav-links {
       display: flex;
@@ -210,7 +219,10 @@
 <body>
   <nav class="navbar">
     <div class="container nav-inner">
-      <div class="brand">Cloud Snake</div>
+      <div class="brand">
+        <img src="Cloud_snake_icon.png" alt="Cloud Snake icon" />
+        <span>Cloud Snake</span>
+      </div>
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="overview.html">Overview</a>
@@ -321,3 +333,4 @@
   </footer>
 </body>
 </html>
+
