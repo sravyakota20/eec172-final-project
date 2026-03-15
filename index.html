@@ -224,7 +224,7 @@
     }
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
     }
     .card {
@@ -295,6 +295,29 @@
       border-radius: 34px;
       padding: 30px;
       box-shadow: 0 15px 36px rgba(0,0,0,0.08);
+    }
+    .video-demo-copy {
+      max-width: 760px;
+      color: #475569;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .video-placeholder {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      border-radius: 28px;
+      border: 1px solid rgba(14, 116, 144, 0.18);
+      background:
+        linear-gradient(135deg, rgba(14, 116, 144, 0.08), rgba(244, 114, 182, 0.08)),
+        #f8fafc;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+    }
+    .video-player {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #020617;
     }
     .demo-team {
       display: grid;
@@ -418,7 +441,7 @@
         <div class="card">
           <div class="card-icon">🎮</div>
           <h3>IR-Controlled Gameplay</h3>
-          <p>Use an IR remote or the I2C sensor on the LaunchPad to move the snake, pause the game, and navigate menus without needing a phone or keyboard.</p>
+          <p>Play your way with either an IR remote or the LaunchPad's onboard I2C sensor, letting you steer the snake, pause the action, and glide through menus with a simple tilt.</p>
         </div>
         <div class="card">
           <div class="card-icon">🖥️</div>
@@ -429,11 +452,6 @@
           <div class="card-icon">☁️</div>
           <h3>Cloud Leaderboard</h3>
           <p>After each game, scores are uploaded to AWS IoT so a webpage can display top players and recent runs.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">📡</div>
-          <h3>Smart Sensors</h3>
-          <p>An I2C sensor on the LaunchPad enables extra interactions like shake-to-pause or future gameplay extensions.</p>
         </div>
       </div>
     </div>
@@ -479,33 +497,16 @@
 
   <section class="section">
     <div class="container big-panel">
-      <div class="demo-team">
-        <div>
-          <div class="section-title" style="color:#059669;">Demo Goals</div>
-          <h2>Minimum viable demo</h2>
-          <ul>
-            <li>Boot directly into a polished menu on the OLED screen</li>
-            <li>Play Snake with responsive IR remote controls</li>
-            <li>Save player name and scores locally</li>
-            <li>Upload game results to AWS IoT after game over</li>
-            <li>Show leaderboard data on a companion webpage</li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="section-title" style="color:#0891b2;">Team</div>
-          <h2>Project members</h2>
-          <div class="member">
-            <strong>Sravya Kota</strong><br />
-            CSE, UC Davis<br />
-            sskota@ucdavis.edu
-          </div>
-          <div class="member">
-            <strong>Xunye Nian</strong><br />
-            CE, UC Davis<br />
-            xynian@ucdavis.edu
-          </div>
-        </div>
+      <div class="section-title" style="color:#059669;">Video Demo</div>
+      <h2>See Cloud Snake in action</h2>
+      <p class="video-demo-copy">
+        Watch the full walkthrough of the menu flow, gameplay, tilt controls, and cloud-connected leaderboard in one polished demo.
+      </p>
+      <div class="video-placeholder">
+        <video class="video-player" controls preload="metadata" playsinline>
+          <source src="cloud-snake-demo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
     </div>
   </section>
