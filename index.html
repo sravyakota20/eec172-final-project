@@ -33,9 +33,18 @@
       padding: 16px 0;
     }
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 800;
       font-size: 1.2rem;
       color: #7c3aed;
+    }
+    .brand img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      flex-shrink: 0;
     }
     .nav-links {
       display: flex;
@@ -360,7 +369,10 @@
 <body>
   <nav class="navbar">
     <div class="container nav-inner">
-      <div class="brand">Cloud Snake</div>
+      <div class="brand">
+        <img src="Cloud_snake_icon.png" alt="Cloud Snake icon" />
+        <span>Cloud Snake</span>
+      </div>
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="overview.html">Overview</a>
@@ -503,7 +515,7 @@
         Watch the full walkthrough of the menu flow, gameplay, tilt controls, and cloud-connected leaderboard in one polished demo.
       </p>
       <div class="video-placeholder">
-        <video class="video-player" controls preload="metadata" playsinline>
+        <video class="video-player" controls autoplay muted loop preload="auto" playsinline>
           <source src="cloud-snake-demo.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
