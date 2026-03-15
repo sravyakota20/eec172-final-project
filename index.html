@@ -358,7 +358,8 @@
         </h1>
         <p>
           A standalone embedded gaming console built with the CC3200. Play Snake on a color OLED,
-          control it with an IR remote, and send your scores to a cloud leaderboard.
+          control it with an IR remote or the I2C sensor present on the launchpad, and send your
+          scores to a cloud leaderboard.
         </p>
         <div class="hero-buttons">
           <a class="btn btn-primary" href="overview.html">Explore Project</a>
@@ -417,7 +418,7 @@
         <div class="card">
           <div class="card-icon">🎮</div>
           <h3>IR-Controlled Gameplay</h3>
-          <p>Use an IR remote to move the snake, pause the game, and navigate menus without needing a phone or keyboard.</p>
+          <p>Use an IR remote or the I2C sensor on the LaunchPad to move the snake, pause the game, and navigate menus without needing a phone or keyboard.</p>
         </div>
         <div class="card">
           <div class="card-icon">🖥️</div>
@@ -432,7 +433,7 @@
         <div class="card">
           <div class="card-icon">📡</div>
           <h3>Smart Sensors</h3>
-          <p>An I2C sensor enables extra interactions like shake-to-pause or future gameplay extensions.</p>
+          <p>An I2C sensor on the LaunchPad enables extra interactions like shake-to-pause or future gameplay extensions.</p>
         </div>
       </div>
     </div>
@@ -444,11 +445,12 @@
         <div class="section-title" style="color:#67e8f9;">Architecture</div>
         <h2 style="margin-bottom:18px;">System flow</h2>
         <div class="flow-step"><div class="step-number">1</div><div>Boot into the main menu</div></div>
-        <div class="flow-step"><div class="step-number">2</div><div>Enter player name</div></div>
-        <div class="flow-step"><div class="step-number">3</div><div>Start Snake on the OLED display</div></div>
-        <div class="flow-step"><div class="step-number">4</div><div>Control movement with IR remote</div></div>
-        <div class="flow-step"><div class="step-number">5</div><div>Save score after game over</div></div>
-        <div class="flow-step"><div class="step-number">6</div><div>Upload results to cloud leaderboard</div></div>
+        <div class="flow-step"><div class="step-number">2</div><div>Start play</div></div>
+        <div class="flow-step"><div class="step-number">3</div><div>Choose difficulty mode</div></div>
+        <div class="flow-step"><div class="step-number">4</div><div>Choose play mode (Remote/Board)</div></div>
+        <div class="flow-step"><div class="step-number">5</div><div>Save score</div></div>
+        <div class="flow-step"><div class="step-number">6</div><div>Enter name</div></div>
+        <div class="flow-step"><div class="step-number">7</div><div>Upload results to cloud leaderboard</div></div>
       </div>
 
       <div>
